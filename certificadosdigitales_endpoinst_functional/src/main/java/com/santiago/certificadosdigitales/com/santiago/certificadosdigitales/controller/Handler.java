@@ -68,20 +68,17 @@ public class Handler {
 
     public Mono<ServerResponse> deleteCertification(ServerRequest request){
         String id = request.pathVariable("id");
-        repository.findById(id)
-                .flatMap(existingCertificate -> repository.delete(existingCertificate)
-                        .then(Mono.just(ResponseEntity.ok().<Void>build())))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+        Mono<Void> result =  repository.deleteById(id);
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just("Eliminacion exitosa"), String.class);
+                .body(result, String.class);
     }
 
 
     public Mono<ServerResponse> deleteAllCertificates(ServerRequest request){
-        repository.deleteAll();
+        Mono<Void> result =  repository.deleteAll();
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(Mono.just("Eliminacion exitosa"), String.class);
+                .body(result, String.class);
     }
 }
